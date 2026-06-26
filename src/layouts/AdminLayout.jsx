@@ -1,0 +1,45 @@
+import { NavLink, Outlet } from "react-router-dom";
+
+const navItems = [
+  { label: "Dashboard", to: "/admin/dashboard" },
+  { label: "Daftar Lowongan", to: "/admin/jobs" },
+  { label: "Tambah Lowongan", to: "/admin/jobs/create" },
+];
+
+function AdminLayout() {
+  return (
+    <div className="container-fluid">
+      <div className="row flex-nowrap min-vh-100">
+        <aside className="col-auto col-md-3 col-xl-2 px-0 bg-light border-end">
+          <div className="d-flex flex-column align-items-start p-3">
+            <NavLink to="/admin/dashboard" className="d-flex align-items-center mb-4 text-decoration-none text-dark">
+              <span className="fs-4 fw-bold">Workly Admin</span>
+            </NavLink>
+            <hr className="w-100" />
+            <nav className="nav nav-pills flex-column w-100">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) =>
+                    `nav-link text-start ${isActive ? "active" : "text-secondary"}`
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+            </nav>
+          </div>
+        </aside>
+
+        <main className="col py-4">
+          <div className="container">
+            <Outlet />
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
+
+export default AdminLayout;
