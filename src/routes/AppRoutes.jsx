@@ -9,12 +9,20 @@ import Register from "../pages/user/Register";
 import Home from "../pages/user/Home";
 import DetailJob from "../pages/user/DetailJob";
 import Profile from "../pages/user/Profile";
+import AdminProtectedRoute from "../components/AdminProtectedRoute";
 
 function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/admin" element={<AdminLayout />}>
+          <Route
+            path="/admin"
+            element={
+              <AdminProtectedRoute>
+                <AdminLayout />
+              </AdminProtectedRoute>
+            }
+          >
           <Route index element={<Navigate to="/admin/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="jobs" element={<JobList />} />

@@ -18,6 +18,8 @@ function Login() {
         password,
       });
 
+      console.log(response.data);
+
       const token = response.data.access_token;
       const role = response.data.role;
 
@@ -79,12 +81,12 @@ function Login() {
             />
           </div>
 
-          <button
-            className="btn login-btn"
-            onClick={handleLogin}
-          >
-            Masuk Sekarang
-          </button>
+                  <button
+          type="submit"
+          className="btn login-btn"
+        >
+          Masuk Sekarang
+        </button>
         </form>
 
         <div className="register-section">
