@@ -22,7 +22,8 @@ function AppRoutes() {
           <Route path="jobs/edit/:id" element={<EditJob />} />
         </Route>
 
-        <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />        
         <Route path="/register" element={<Register />} />
         <Route path="/home" element={<Home />} />
         <Route path="/job/:id" element={<DetailJob />} />
