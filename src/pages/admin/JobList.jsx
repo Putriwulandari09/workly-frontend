@@ -1,59 +1,121 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-const jobs = [
-  { id: 1, title: "Frontend Developer", company: "Workly", location: "Jakarta", status: "Aktif" },
-  { id: 2, title: "Backend Developer", company: "TechNova", location: "Bandung", status: "Draft" },
-  { id: 3, title: "UI/UX Designer", company: "Kreatif Studio", location: "Surabaya", status: "Aktif" },
-];
+import jobService from "../../services/jobService";
 
 function JobList() {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadJobs();
+  }, []);
+
+  const loadJobs = async () => {
+    try {
+      const data = await jobService.getJobs();
+      setJobs(data);
+    } catch (error) {
+      console.error("Gagal mengambil data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Yakin ingin menghapus lowongan?")) return;
+
+    try {
+      await jobService.deleteJob(id);
+
+      alert("Lowongan berhasil dihapus");
+
+      loadJobs();
+    } catch (error) {
+      console.error(error);
+      alert("Gagal menghapus lowongan");
+    }
+  };
+
+  if (loading) {
+    return <h4>Loading...</h4>;
+  }
+
   return (
     <>
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+      <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h1 className="h3 mb-1">Daftar Lowongan</h1>
-          <p className="text-muted mb-0">Lihat, edit, atau hapus lowongan pekerjaan yang sudah dibuat.</p>
+          <h1 className="h3">Daftar Lowongan</h1>
+          <p className="text-muted">
+            Kelola seluruh data lowongan pekerjaan.
+          </p>
         </div>
-        <Link to="/admin/jobs/create" className="btn btn-primary mt-3 mt-md-0">
+
+        <Link
+          to="/admin/jobs/create"
+          className="btn btn-primary"
+        >
           Tambah Lowongan
         </Link>
       </div>
 
       <div className="table-responsive">
-        <table className="table table-hover align-middle">
+        <table className="table table-bordered table-hover">
+
           <thead className="table-light">
             <tr>
-              <th>#</th>
-              <th>Judul Pekerjaan</th>
+              <th>No</th>
+              <th>Judul</th>
               <th>Perusahaan</th>
               <th>Lokasi</th>
-              <th>Status</th>
-              <th className="text-end">Aksi</th>
+              <th>Tipe</th>
+              <th width="170">Aksi</th>
             </tr>
           </thead>
+
           <tbody>
-            {jobs.map((job, index) => (
-              <tr key={job.id}>
-                <td>{index + 1}</td>
-                <td>{job.title}</td>
-                <td>{job.company}</td>
-                <td>{job.location}</td>
-                <td>
-                  <span className={`badge ${job.status === "Aktif" ? "bg-success" : "bg-secondary"}`}>
-                    {job.status}
-                  </span>
-                </td>
-                <td className="text-end">
-                  <Link to={`/admin/jobs/edit/${job.id}`} className="btn btn-sm btn-outline-primary me-2">
-                    Edit
-                  </Link>
-                  <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => alert("Hapus lowongan: " + job.title)}>
-                    Hapus
-                  </button>
+
+            {jobs.length === 0 ? (
+              <tr>
+                <td colSpan="6" className="text-center">
+                  Belum ada data
                 </td>
               </tr>
-            ))}
+            ) : (
+              jobs.map((job, index) => (
+                <tr key={job.id}>
+                  <td>{index + 1}</td>
+
+                  <td>{job.judul}</td>
+
+                  <td>{job.perusahaan}</td>
+
+                  <td>{job.lokasi}</td>
+
+                  <td>{job.tipe_pekerjaan}</td>
+
+                  <td>
+
+                    <Link
+                      to={`/admin/jobs/edit/${job.id}`}
+                      className="btn btn-warning btn-sm me-2"
+                    >
+                      Edit
+                    </Link>
+
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleDelete(job.id)}
+                    >
+                      Hapus
+                    </button>
+
+                  </td>
+                </tr>
+              ))
+            )}
+
           </tbody>
+
         </table>
       </div>
     </>
