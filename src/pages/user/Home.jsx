@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import jobService from "../../services/jobService";
 import categoryService from "../../services/categoryService";
+import UserNavbar from "../../components/UserNavbar";
 
 function Home() {
   const [jobs, setJobs] = useState([]);
@@ -54,6 +55,8 @@ function Home() {
   }
 
   return (
+  <>
+    <UserNavbar />
     <div className="container py-5">
 
       {/* Tombol Profile */}
@@ -188,6 +191,7 @@ function Home() {
       </div>
 
     </div>
+  </>
   );
 }
 

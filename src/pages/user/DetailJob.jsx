@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import jobService from "../../services/jobService";
+import UserNavbar from "../../components/UserNavbar";
 
 function DetailJob() {
   const { id } = useParams();
@@ -10,7 +11,7 @@ function DetailJob() {
 
   useEffect(() => {
     loadJob();
-  }, []);
+  }, [id]);
 
   const loadJob = async () => {
     try {
@@ -40,6 +41,8 @@ function DetailJob() {
   }
 
   return (
+  <>
+    <UserNavbar />
     <div className="container py-5">
 
       <Link
@@ -97,6 +100,7 @@ function DetailJob() {
       </div>
 
     </div>
+  </>
   );
 }
 

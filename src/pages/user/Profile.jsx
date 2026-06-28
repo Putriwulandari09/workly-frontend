@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import UserNavbar from "../../components/UserNavbar";
 
 function Profile() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ function Profile() {
     }
 
     setUser(data);
-  }, []);
+  }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -34,6 +35,8 @@ function Profile() {
   }
 
   return (
+  <>
+    <UserNavbar />
     <div className="container py-5">
 
       <div className="card shadow">
@@ -76,6 +79,7 @@ function Profile() {
       </div>
 
     </div>
+  </>
   );
 }
 
