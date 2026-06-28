@@ -7,22 +7,37 @@ function JobList() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("JobList mounted");
     loadJobs();
   }, []);
 
   const loadJobs = async () => {
+    console.log("loadJobs dipanggil");
+
     try {
       const data = await jobService.getJobs();
+
+      console.log("DATA :", data);
+      console.log("JUMLAH DATA :", data.length);
+
       setJobs(data);
     } catch (error) {
       console.error("Gagal mengambil data:", error);
+
+      if (error.response) {
+        console.log(error.response.data);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Yakin ingin menghapus lowongan?")) return;
+    const confirmDelete = window.confirm(
+      "Apakah Anda yakin ingin menghapus lowongan ini?"
+    );
+
+    if (!confirmDelete) return;
 
     try {
       await jobService.deleteJob(id);
@@ -32,7 +47,12 @@ function JobList() {
       loadJobs();
     } catch (error) {
       console.error(error);
-      alert("Gagal menghapus lowongan");
+
+      if (error.response) {
+        console.log(error.response.data);
+      }
+
+      alert("Gagal menghapus lowongan.");
     }
   };
 
@@ -60,7 +80,6 @@ function JobList() {
 
       <div className="table-responsive">
         <table className="table table-bordered table-hover">
-
           <thead className="table-light">
             <tr>
               <th>No</th>
@@ -73,7 +92,6 @@ function JobList() {
           </thead>
 
           <tbody>
-
             {jobs.length === 0 ? (
               <tr>
                 <td colSpan="6" className="text-center">
@@ -84,17 +102,11 @@ function JobList() {
               jobs.map((job, index) => (
                 <tr key={job.id}>
                   <td>{index + 1}</td>
-
                   <td>{job.judul}</td>
-
                   <td>{job.perusahaan}</td>
-
                   <td>{job.lokasi}</td>
-
                   <td>{job.tipe_pekerjaan}</td>
-
                   <td>
-
                     <Link
                       to={`/admin/jobs/edit/${job.id}`}
                       className="btn btn-warning btn-sm me-2"
@@ -108,14 +120,11 @@ function JobList() {
                     >
                       Hapus
                     </button>
-
                   </td>
                 </tr>
               ))
             )}
-
           </tbody>
-
         </table>
       </div>
     </>
