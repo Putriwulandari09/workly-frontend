@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import jobService from "../../services/jobService";
 
 function Home() {
-  const [jobs, setJobs] =useState([]);
+  const [jobs, setJobs] = useState([]);
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,15 +16,23 @@ function Home() {
       const data = await jobService.getJobs();
       setJobs(data);
     } catch (error) {
-      console.error(error);
+      console.error("Gagal mengambil data:", error);
     } finally {
       setLoading(false);
     }
   };
 
+  const filteredJobs = jobs.filter((job) => {
+    return (
+      job.judul.toLowerCase().includes(search.toLowerCase()) ||
+      job.perusahaan.toLowerCase().includes(search.toLowerCase()) ||
+      job.lokasi.toLowerCase().includes(search.toLowerCase())
+    );
+  });
+
   if (loading) {
     return (
-      <div className="container py-5">
+      <div className="container py-5 text-center">
         <h3>Loading...</h3>
       </div>
     );
@@ -32,35 +41,52 @@ function Home() {
   return (
     <div className="container py-5">
 
+      {/* Header */}
       <div className="text-center mb-5">
-        <h1>Workly</h1>
+        <h1 className="fw-bold">Workly</h1>
         <p className="text-muted">
-          Temukan pekerjaan impianmu
+          Temukan pekerjaan impianmu di sini.
         </p>
       </div>
 
+      {/* Search */}
+      <div className="row justify-content-center mb-5">
+        <div className="col-md-8">
+          <input
+            type="text"
+            className="form-control form-control-lg"
+            placeholder="Cari berdasarkan judul, perusahaan, atau lokasi..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Data Lowongan */}
       <div className="row">
 
-        {jobs.length === 0 ? (
+        {filteredJobs.length === 0 ? (
 
           <div className="text-center">
-            <h4>Belum ada lowongan.</h4>
+            <h4>Lowongan tidak ditemukan.</h4>
           </div>
 
         ) : (
 
-          jobs.map((job) => (
+          filteredJobs.map((job) => (
 
             <div
-              className="col-md-4 mb-4"
+              className="col-lg-4 col-md-6 mb-4"
               key={job.id}
             >
 
               <div className="card shadow-sm h-100">
 
-                <div className="card-body">
+                <div className="card-body d-flex flex-column">
 
-                  <h4>{job.judul}</h4>
+                  <h4 className="fw-bold">
+                    {job.judul}
+                  </h4>
 
                   <p className="mb-2">
                     <strong>Perusahaan</strong><br />
@@ -77,12 +103,14 @@ function Home() {
                     {job.tipe_pekerjaan}
                   </p>
 
-                  <Link
-                    to={`/job/${job.id}`}
-                    className="btn btn-primary w-100"
-                  >
-                    Lihat Detail
-                  </Link>
+                  <div className="mt-auto">
+                    <Link
+                      to={`/job/${job.id}`}
+                      className="btn btn-primary w-100"
+                    >
+                      Lihat Detail
+                    </Link>
+                  </div>
 
                 </div>
 
