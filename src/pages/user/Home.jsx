@@ -6,7 +6,6 @@ import categoryService from "../../services/categoryService";
 function Home() {
   const [jobs, setJobs] = useState([]);
   const [categories, setCategories] = useState([]);
-
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
@@ -25,29 +24,30 @@ function Home() {
       setJobs(jobData);
       setCategories(categoryData);
     } catch (error) {
-      console.log(error);
+      console.error("Gagal mengambil data:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const filteredJobs = jobs.filter((job) => {
-    const cocokJudul = job.judul
-      .toLowerCase()
-      .includes(search.toLowerCase());
+    const matchSearch =
+      job.judul.toLowerCase().includes(search.toLowerCase()) ||
+      job.perusahaan.toLowerCase().includes(search.toLowerCase()) ||
+      job.lokasi.toLowerCase().includes(search.toLowerCase());
 
-    const cocokKategori =
+    const matchCategory =
       category === "" || job.category_id === Number(category);
 
-    const cocokTipe =
+    const matchType =
       type === "" || job.tipe_pekerjaan === type;
 
-    return cocokJudul && cocokKategori && cocokTipe;
+    return matchSearch && matchCategory && matchType;
   });
 
   if (loading) {
     return (
-      <div className="container py-5">
+      <div className="container py-5 text-center">
         <h3>Loading...</h3>
       </div>
     );
@@ -56,18 +56,30 @@ function Home() {
   return (
     <div className="container py-5">
 
-      <h1 className="text-center mb-2">
-        Workly
-      </h1>
+      {/* Tombol Profile */}
+      <div className="d-flex justify-content-end mb-3">
+        <Link
+          to="/profile"
+          className="btn btn-outline-primary"
+        >
+          Profil Saya
+        </Link>
+      </div>
 
-      <p className="text-center text-muted mb-5">
-        Temukan pekerjaan impianmu
-      </p>
+      {/* Header */}
+      <div className="text-center mb-5">
+        <h1 className="fw-bold">Workly</h1>
+        <p className="text-muted">
+          Temukan pekerjaan impianmu
+        </p>
+      </div>
 
+      {/* Search & Filter */}
       <div className="row mb-4">
 
-        <div className="col-md-4">
+        <div className="col-md-4 mb-3">
           <input
+            type="text"
             className="form-control"
             placeholder="Cari pekerjaan..."
             value={search}
@@ -75,7 +87,7 @@ function Home() {
           />
         </div>
 
-        <div className="col-md-4">
+        <div className="col-md-4 mb-3">
           <select
             className="form-select"
             value={category}
@@ -91,38 +103,32 @@ function Home() {
                 {cat.name}
               </option>
             ))}
-
           </select>
         </div>
 
-        <div className="col-md-4">
-
+        <div className="col-md-4 mb-3">
           <select
             className="form-select"
             value={type}
             onChange={(e) => setType(e.target.value)}
           >
             <option value="">Semua Tipe</option>
-            <option>Full Time</option>
-            <option>Part Time</option>
-            <option>Internship</option>
-            <option>Freelance</option>
+            <option value="Full Time">Full Time</option>
+            <option value="Part Time">Part Time</option>
+            <option value="Internship">Internship</option>
+            <option value="Freelance">Freelance</option>
           </select>
-
         </div>
 
       </div>
 
+      {/* Daftar Lowongan */}
       <div className="row">
 
         {filteredJobs.length === 0 ? (
 
           <div className="text-center">
-
-            <h4>
-              Lowongan tidak ditemukan.
-            </h4>
-
+            <h4>Tidak ada lowongan yang sesuai.</h4>
           </div>
 
         ) : (
@@ -130,15 +136,16 @@ function Home() {
           filteredJobs.map((job) => (
 
             <div
-              className="col-md-4 mb-4"
+              className="col-lg-4 col-md-6 mb-4"
               key={job.id}
             >
-
               <div className="card shadow-sm h-100">
 
-                <div className="card-body">
+                <div className="card-body d-flex flex-column">
 
-                  <h4>{job.judul}</h4>
+                  <h4 className="fw-bold">
+                    {job.judul}
+                  </h4>
 
                   <p className="mb-2">
                     <strong>Perusahaan</strong><br />
@@ -156,21 +163,22 @@ function Home() {
                   </p>
 
                   <p className="mb-3">
-                    <strong>Tipe</strong><br />
+                    <strong>Tipe Pekerjaan</strong><br />
                     {job.tipe_pekerjaan}
                   </p>
 
-                  <Link
-                    to={`/job/${job.id}`}
-                    className="btn btn-primary w-100"
-                  >
-                    Lihat Detail
-                  </Link>
+                  <div className="mt-auto">
+                    <Link
+                      to={`/job/${job.id}`}
+                      className="btn btn-primary w-100"
+                    >
+                      Lihat Detail
+                    </Link>
+                  </div>
 
                 </div>
 
               </div>
-
             </div>
 
           ))

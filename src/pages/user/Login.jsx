@@ -22,9 +22,11 @@ function Login() {
 
       const token = response.data.access_token;
       const role = response.data.role;
+      const user = response.data.user;
 
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
+      localStorage.setItem("user", JSON.stringify(user));
 
       if (role === "admin") {
         navigate("/admin/dashboard");

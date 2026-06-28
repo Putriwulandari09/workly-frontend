@@ -14,7 +14,7 @@ function AdminLayout() {
     localStorage.removeItem("user");
     localStorage.removeItem("role");
 
-    navigate("/");
+    navigate("/login");
   };
 
   return (
