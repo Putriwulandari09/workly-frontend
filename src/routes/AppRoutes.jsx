@@ -10,6 +10,7 @@ import Home from "../pages/user/Home";
 import DetailJob from "../pages/user/DetailJob";
 import Profile from "../pages/user/Profile";
 import AdminProtectedRoute from "../components/AdminProtectedRoute";
+import NotFound from "../pages/NotFound";
 
 function AppRoutes() {
   return (
@@ -36,6 +37,7 @@ function AppRoutes() {
         <Route path="/home" element={<Home />} />
         <Route path="/job/:id" element={<DetailJob />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

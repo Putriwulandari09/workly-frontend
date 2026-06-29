@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../services/api";
+import Swal from "sweetalert2";
 
 function Register() {
   const navigate = useNavigate();
@@ -25,17 +26,25 @@ function Register() {
     try {
       await api.post("/register", form);
 
-      alert("Registrasi berhasil.");
+      await Swal.fire({
+        icon: "success",
+        title: "Registrasi Berhasil",
+        text: "Silakan login menggunakan akun Anda.",
+      });
 
       navigate("/login");
     } catch (error) {
       console.error(error);
 
       if (error.response) {
-        console.log(error.response.data);
+        console.error(error.response.data);
       }
 
-      alert("Registrasi gagal.");
+      Swal.fire({
+        icon: "error",
+        title: "Registrasi Gagal",
+        text: "Silakan periksa kembali data yang Anda masukkan.",
+      });
     }
   };
 

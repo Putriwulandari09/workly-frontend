@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import jobService from "../../services/jobService";
+import Swal from "sweetalert2";
 
 function EditJob() {
   const { id } = useParams();
@@ -22,7 +23,7 @@ function EditJob() {
 
   useEffect(() => {
     loadJob();
-  }, []);
+  }, [id]);
 
   const loadJob = async () => {
     try {
@@ -41,7 +42,12 @@ function EditJob() {
       });
     } catch (error) {
       console.error(error);
-      alert("Gagal mengambil data.");
+
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: "Gagal mengambil data.",
+      });
     } finally {
       setLoading(false);
     }
@@ -62,22 +68,35 @@ function EditJob() {
     try {
       await jobService.updateJob(id, form);
 
-      alert("Lowongan berhasil diperbarui.");
+      await Swal.fire({
+        icon: "success",
+        title: "Berhasil",
+        text: "Lowongan berhasil diperbarui.",
+      });
 
       navigate("/admin/jobs");
     } catch (error) {
       console.error(error);
 
       if (error.response) {
-        console.log(error.response.data);
+        console.error(error.response.data);
       }
 
-      alert("Gagal memperbarui lowongan.");
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: "Gagal memperbarui lowongan.",
+      });
     }
   };
 
   if (loading) {
-    return <h4>Loading...</h4>;
+    return 
+    <div className="d-flex justify-content-center py-5">
+      <div className="spinner-border text-primary" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    </div>
   }
 
   return (

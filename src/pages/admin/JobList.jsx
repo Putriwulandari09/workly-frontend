@@ -1,63 +1,77 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import jobService from "../../services/jobService";
+import Swal from "sweetalert2";
 
 function JobList() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    console.log("JobList mounted");
+useEffect(() => {
+  loadJobs();
+}, []);
+
+const loadJobs = async () => {
+  try {
+    const data = await jobService.getJobs();
+    setJobs(data);
+  } catch (error) {
+    console.error("Gagal mengambil data:", error);
+
+    if (error.response) {
+      console.error(error.response.data);
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+
+const handleDelete = async (id) => {
+  const result = await Swal.fire({
+    title: "Hapus Lowongan?",
+    text: "Data yang dihapus tidak dapat dikembalikan.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Ya, Hapus",
+    cancelButtonText: "Batal",
+  });
+
+  if (!result.isConfirmed) return;
+
+  try {
+    await jobService.deleteJob(id);
+
+    await Swal.fire({
+      icon: "success",
+      title: "Berhasil",
+      text: "Lowongan berhasil dihapus.",
+      timer: 1500,
+      showConfirmButton: false,
+    });
+
     loadJobs();
-  }, []);
+  } catch (error) {
+    console.error(error);
 
-  const loadJobs = async () => {
-    console.log("loadJobs dipanggil");
-
-    try {
-      const data = await jobService.getJobs();
-
-      console.log("DATA :", data);
-      console.log("JUMLAH DATA :", data.length);
-
-      setJobs(data);
-    } catch (error) {
-      console.error("Gagal mengambil data:", error);
-
-      if (error.response) {
-        console.log(error.response.data);
-      }
-    } finally {
-      setLoading(false);
+    if (error.response) {
+      console.error(error.response.data);
     }
-  };
 
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm(
-      "Apakah Anda yakin ingin menghapus lowongan ini?"
-    );
-
-    if (!confirmDelete) return;
-
-    try {
-      await jobService.deleteJob(id);
-
-      alert("Lowongan berhasil dihapus");
-
-      loadJobs();
-    } catch (error) {
-      console.error(error);
-
-      if (error.response) {
-        console.log(error.response.data);
-      }
-
-      alert("Gagal menghapus lowongan.");
-    }
-  };
+    Swal.fire({
+      icon: "error",
+      title: "Gagal",
+      text: "Lowongan gagal dihapus.",
+    });
+  }
+};
 
   if (loading) {
-    return <h4>Loading...</h4>;
+    return 
+    <div className="d-flex justify-content-center py-5">
+      <div className="spinner-border text-primary" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    </div>
   }
 
   return (

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import jobService from "../../services/jobService";
 import categoryService from "../../services/categoryService";
+import Swal from "sweetalert2";
 
 function CreateJob() {
   const navigate = useNavigate();
@@ -48,17 +49,25 @@ function CreateJob() {
     try {
       await jobService.createJob(form);
 
-      alert("Lowongan berhasil ditambahkan.");
+      await Swal.fire({
+        icon: "success",
+        title: "Berhasil",
+        text: "Lowongan berhasil ditambahkan.",
+      });
 
       navigate("/admin/jobs");
     } catch (error) {
       console.error(error);
 
       if (error.response) {
-        console.log(error.response.data);
+        console.error(error.response.data);
       }
 
-      alert("Gagal menambahkan lowongan.");
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: "Lowongan gagal ditambahkan.",
+      });
     }
   };
 

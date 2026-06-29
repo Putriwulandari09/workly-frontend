@@ -2,6 +2,7 @@ import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api from "../../services/api";
+import Swal from "sweetalert2";
 
 function Login() {
   const navigate = useNavigate();
@@ -18,8 +19,6 @@ function Login() {
         password,
       });
 
-      console.log(response.data);
-
       const token = response.data.access_token;
       const role = response.data.role;
       const user = response.data.user;
@@ -28,13 +27,24 @@ function Login() {
       localStorage.setItem("role", role);
       localStorage.setItem("user", JSON.stringify(user));
 
+      await Swal.fire({
+        icon: "success",
+        title: "Login Berhasil",
+        text: "Selamat datang di Workly.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
       if (role === "admin") {
         navigate("/admin/dashboard");
       } else {
         navigate("/home");
       }
     } catch (error) {
-      alert("Email atau Password salah!");
+      Swal.fire({
+        icon: "error",
+        title: "Login Gagal",
+        text: "Email atau Password salah.",
+      });
       console.error(error);
     }
   };
