@@ -1,8 +1,8 @@
-import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api from "../../services/api";
 import Swal from "sweetalert2";
+import AuthLayout from "../../components/AuthLayout";
 
 function Login() {
   const navigate = useNavigate();
@@ -49,73 +49,71 @@ function Login() {
     }
   };
 
-  return (
-    <div className="login-page">
-      <div className="navbar-brand-custom">
-        Workly
+return (
+  <AuthLayout
+    title="Masuk"
+    subtitle="Silakan masuk untuk melanjutkan ke Workly."
+  >
+
+    <form onSubmit={handleLogin}>
+
+      <div className="mb-3">
+
+        <label className="form-label">
+          Email
+        </label>
+
+        <input
+          type="email"
+          className="form-control auth-input"
+          placeholder="Masukkan email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+
       </div>
 
-      <div className="login-card">
-        <h1 className="login-title">
-          Selamat Datang
-        </h1>
+      <div className="mb-4">
 
-        <p className="login-subtitle">
-          Masuk ke akun Workly untuk melanjutkan karir Anda.
-        </p>
+        <label className="form-label">
+          Password
+        </label>
 
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
-            <label className="form-label">
-              Email
-            </label>
+        <input
+          type="password"
+          className="form-control auth-input"
+          placeholder="Masukkan password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
 
-            <input
-              type="email"
-              className="form-control custom-input"
-              placeholder="contoh@workly.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="form-label">
-              Password
-            </label>
-
-            <input
-              type="password"
-              className="form-control custom-input"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-                  <button
-          type="submit"
-          className="btn login-btn"
-        >
-          Masuk Sekarang
-        </button>
-        </form>
-
-        <div className="register-section">
-          <div className="line"></div>
-          <span>Belum punya akun?</span>
-          <div className="line"></div>
-        </div>
-
-        <Link
-          to="/register"
-          className="register-link"
-        >
-          Daftar Gratis
-        </Link>
       </div>
+
+      <button
+        className="btn auth-button w-100"
+        type="submit"
+      >
+        Masuk
+      </button>
+
+    </form>
+
+    <div className="text-center mt-4">
+
+      Belum punya akun?
+
+      <Link
+        to="/register"
+        className="auth-link ms-2"
+      >
+        Daftar
+      </Link>
+
     </div>
-  );
-}
 
+  </AuthLayout>
+);
+}
 export default Login;

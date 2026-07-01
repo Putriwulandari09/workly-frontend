@@ -1,0 +1,42 @@
+.shadow-card{
+
+box-shadow:var(--shadow);
+
+}
+
+.radius{
+
+border-radius:var(--radius);
+
+}
+
+.primary-btn{
+
+background:var(--primary);
+color:white;
+border:none;
+padding:14px 25px;
+border-radius:12px;
+
+}
+
+.primary-btn:hover{
+
+background:var(--primary-dark);
+
+}
+
+.input-modern{
+
+height:54px;
+border-radius:12px;
+border:1px solid var(--border);
+
+}
+
+.input-modern:focus{
+
+border-color:var(--primary);
+box-shadow:0 0 0 .2rem rgba(91,61,245,.15);
+
+}

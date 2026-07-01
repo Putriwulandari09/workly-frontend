@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import Swal from "sweetalert2";
+import AuthLayout from "../../components/AuthLayout";
 
 function Register() {
   const navigate = useNavigate();
@@ -48,107 +49,96 @@ function Register() {
     }
   };
 
-  return (
-    <div className="container py-5">
-
-      <div className="row justify-content-center">
-
-        <div className="col-md-6">
-
-          <div className="card shadow">
-
-            <div className="card-body">
-
-              <h2 className="mb-4 text-center">
-                Register Workly
-              </h2>
-
-              <form onSubmit={handleRegister}>
-
-                <div className="mb-3">
-                  <label>Nama</label>
-
-                  <input
-                    type="text"
-                    name="name"
-                    className="form-control"
-                    value={form.name}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label>Email</label>
-
-                  <input
-                    type="email"
-                    name="email"
-                    className="form-control"
-                    value={form.email}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label>Password</label>
-
-                  <input
-                    type="password"
-                    name="password"
-                    className="form-control"
-                    value={form.password}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label>Konfirmasi Password</label>
-
-                  <input
-                    type="password"
-                    name="password_confirmation"
-                    className="form-control"
-                    value={form.password_confirmation}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="btn btn-primary w-100"
-                >
-                  Daftar
-                </button>
-
-              </form>
-
-              <div className="text-center mt-3">
-
-                Sudah punya akun?
-
-                <Link
-                  to="/login"
-                  className="ms-2"
-                >
-                  Login
-                </Link>
-
-              </div>
-
-            </div>
-
-          </div>
-
+return (
+    <AuthLayout
+      title="Buat Akun"
+      subtitle="Lengkapi data diri untuk membuat akun baru."
+    >
+    
+      <form onSubmit={handleRegister}>
+        <div className="mb-3">
+          <label className="form-label">
+          Nama Lengkap
+          </label>
+          <input
+            type="text"
+            name="name"
+            className="form-control auth-input"
+            value={form.name}
+            onChange={handleChange}
+            placeholder="Masukkan nama lengkap"
+            required
+          />
         </div>
+
+        <div className="mb-3">
+          <label className="form-label">
+          Email
+          </label>
+          <input
+            type="email"
+            name="email"
+            className="form-control auth-input"
+            value={form.email}
+            onChange={handleChange}
+            placeholder="Masukkan email"
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">
+          Password
+          </label>
+          <input
+            type="password"
+            name="password"
+            className="form-control auth-input"
+            value={form.password}
+            onChange={handleChange}
+            placeholder="Masukkan password"
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="form-label">
+          Konfirmasi Password
+          </label>
+          <input
+            type="password"
+            name="password_confirmation"
+            className="form-control auth-input"
+            value={form.password_confirmation}
+            onChange={handleChange}
+            placeholder="Masukkan ulang password"
+            required
+          />
+        </div>
+
+      <button
+        type="submit"
+        className="btn auth-button w-100"
+      >
+        Daftar
+      </button>
+
+      </form>
+
+      <div className="text-center mt-4">
+        Sudah punya akun?
+        <Link
+          to="/login"
+          className="auth-link ms-2"
+        >
+          Masuk
+        </Link>
 
       </div>
 
-    </div>
-  );
+      </AuthLayout>
+
+);
 }
 
 export default Register;
